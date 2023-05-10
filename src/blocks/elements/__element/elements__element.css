@@ -1,0 +1,11 @@
+.elements__element {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  background: #FFFFFF;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

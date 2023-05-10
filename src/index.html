@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Олег Марков" />
+    <title>Mesto</title>
+  </head>
+  <body>
+    <div classname="page">
+      <header classname="header">
+        <img
+          classname="header__logo"
+          src="<%=require('./images/header/Vector.svg')%>"
+          alt="логотип"
+        />
+      </header>
+      <main classname="content">
+        <section classname="profile">
+          <div classname="profile__overlay-avatar">
+            <button classname="profile__edit-avatar" type="button"></button>
+            <img classname="profile__avatar" src="#" alt="аватар" />
+          </div>
+          <div classname="profile__info">
+            <div classname="profile__data">
+              <h1 classname="profile__title">Олег Марков</h1>
+              <button classname="profile__edit-button" type="button"></button>
+            </div>
+            <p classname="profile__text">Юный исследователь js</p>
+          </div>
+          <button classname="profile__add-button" type="button"></button>
+        </section>
+        <section classname="elements"></section>
+      </main>
+      <footer classname="footer">
+        <p classname="footer__paragraph">© 2023 Mesto Russia</p>
+      </footer>
+      <!-- Popup Edit -->
+      <section classname="popup popup_edit">
+        <div classname="popup__container">
+          <button classname="popup__close popup__close_edit" type="button"></button>
+          <h2 classname="popup__title">Редактировать профиль</h2>
+          <form
+            classname="popup__content popup__content_tipe_edit"
+            name="form"
+            novalidate
+          >
+            <input
+              classname="popup__field popup__field_tipe_name"
+              id="name"
+              name="name"
+              type="text"
+              value=""
+              placeholder="Ваше имя"
+              minlength="2"
+              maxlength="40"
+              required
+            />
+            <span id="name-error" classname="popup__field-error"></span>
+            <input
+              classname="popup__field popup__field_tipe_job"
+              id="about"
+              name="about"
+              type="text"
+              value=""
+              placeholder="О себе"
+              minlength="2"
+              maxlength="200"
+              required
+            />
+            <span id="about-error" classname="popup__field-error"></span>
+            <button
+              classname="popup__button-save popup__button-save_change"
+              name="button_name_save"
+              type="submit"
+            >
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </section>
+      <!-- Popup Add -->
+      <section classname="popup popup_add">
+        <div classname="popup__container">
+          <button classname="popup__close popup__close_add" type="button"></button>
+          <h2 classname="popup__title">Новое место</h2>
+          <form
+            classname="popup__content popup__content_tipe_add"
+            name="form"
+            novalidate
+          >
+            <input
+              classname="popup__field popup__field_tipe_place"
+              id="place"
+              name="name"
+              type="text"
+              value=""
+              placeholder="Название"
+              minlength="2"
+              maxlength="30"
+              required
+            />
+            <span id="place-error" classname="popup__field-error"></span>
+            <input
+              classname="popup__field popup__field_tipe_link"
+              id="link"
+              name="link"
+              type="url"
+              value=""
+              placeholder="Ссылка на картинку"
+              required
+            />
+            <span id="link-error" classname="popup__field-error"></span>
+            <button
+              classname="popup__button-save popup__button-save_add"
+              name="button_name_save"
+              type="submit"
+            >
+              Создать
+            </button>
+          </form>
+        </div>
+      </section>
+      <!-- Popup image -->
+      <section classname="popup popup_image">
+        <figure classname="popup__figure">
+          <button
+            classname="popup__close popup__close_image"
+            type="button"
+          ></button>
+          <img classname="popup__photo" src="#" alt="" />
+          <figcaption classname="popup__signature"></figcaption>
+        </figure>
+      </section>
+      <!-- Popup delete -->
+      <section classname="popup popup_delete">
+        <div classname="popup__container popup__container_delete">
+          <button
+            classname="popup__close popup__close_delete"
+            type="button"
+          ></button>
+          <h2 classname="popup__title popup__title_delete">Вы уверены?</h2>
+          <form classname="popup__content popup__content_tipe_delete" name="form">
+            <button
+              classname="popup__button-save popup__button-save_delete"
+              name="button_name_delete"
+              type="submit"
+            >
+              Да
+            </button>
+          </form>
+        </div>
+      </section>
+      <!-- Popup avatar -->
+      <section classname="popup popup_avatar">
+        <div classname="popup__container popup__container_avatar">
+          <button
+            classname="popup__close popup__close_avatar"
+            type="button"
+          ></button>
+          <h2 classname="popup__title">Обновить аватар</h2>
+          <form
+            classname="popup__content popup__content_tipe_avatar"
+            name="form"
+            novalidate
+            >
+            <input
+              classname="popup__field popup__field_tipe_avatar"
+              id="avatar"
+              name="avatar"
+              type="url"
+              value=""
+              placeholder="Введите ссылку на фото"
+              required
+            />
+            <span id="avatar-error" classname="popup__field-error"></span>
+            <button
+              classname="popup__button-save popup__button-save_avatar"
+              name="button_name_save"
+              type="submit"
+            >
+              Сохранить
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+    <!-- Тemplate -->
+    <template id="elements-template">
+      <div classname="elements__element">
+        <button classname="elements__delete" type="button"></button>
+        <img classname="elements__mask-group" src="#" alt="картинка" />
+        <div classname="elements__signature">
+          <h2 classname="elements__title"></h2>
+          <div classname="elements__like-group">
+            <button classname="elements__group" type="button"></button>
+            <h2 classname="elements__counter"></h2>
+          </div>
+        </div>
+      </div>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+.elements__signature {
+  margin: 0;
+  width: 100%;
+  padding: 22px 21px 19px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
