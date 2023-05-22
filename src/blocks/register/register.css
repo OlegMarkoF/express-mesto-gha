@@ -1,0 +1,10 @@
+.register {
+  margin: 0;
+  padding: 0;
+  margin: 60px auto 80px;
+  display: flex;
+  flex-direction: column;
+  max-width: 358px;
+  justify-content: center;
+  align-items: center;
+}

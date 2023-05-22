@@ -1,0 +1,13 @@
+.register__login-link {
+  margin: 0;
+  padding: 0;
+  margin-left: 6px;
+  color: #ccc;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.register__login-link:hover {
+  opacity: 0.6;
+}
+

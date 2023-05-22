@@ -1,0 +1,4 @@
+.popup__content_tipe_tooltip {
+    display: flex;
+    flex-direction: column;
+}

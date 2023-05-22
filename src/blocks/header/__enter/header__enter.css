@@ -1,0 +1,22 @@
+.header__enter {
+    margin-bottom: 41px;
+    max-width: 53px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: right;
+    color: #FFF;
+
+
+  }
+  
+  @media screen and (max-width: 920px) {
+    .header__enter {
+      margin-bottom: 31px;
+      max-width: 42px;
+      line-height: 17px;
+      font-size: 14px;
+    }
+  }
