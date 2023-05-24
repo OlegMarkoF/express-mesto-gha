@@ -19,29 +19,17 @@ export const authorize = (email, password) => {
     },
     body: JSON.stringify({ email, password }),
   })
-    .then((response) => {
-      return response.json();
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+    .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
 };
 
-export const getContent = (token) => {
+export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
     }
   })
-    .then((response) => {
-      return response.json();
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
 };

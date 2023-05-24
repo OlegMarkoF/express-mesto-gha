@@ -1,6 +1,6 @@
 .login {
-  margin: 0 auto;
   padding: 0;
+  margin: 60px auto 112px;
   display: flex;
   flex-direction: column;
   max-width: 358px;

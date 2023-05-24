@@ -35,6 +35,10 @@ function App() {
   const [email, setEmail] = useState('');
   const [cards, setCards] = useState([]);
   const [message, setMessage] = useState({text: '', img: ''});
+  
+  React.useEffect(() => {
+    tokenCheck();
+  }, [])
 
   React.useEffect(() => {
     api
@@ -149,11 +153,17 @@ function App() {
       .catch((err) => console.log(`Ошибка:${err}`));
   }
 
+  function handleLogout() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    navigate("/signin")
+  }
+  
   function handleLogin(email, password) {
     Auth.authorize(email, password)
     .then((res) => {
-      if (res.jwt) {
-        localStorage.setItem('jwt', res.jwt);
+      if (res) {
+        localStorage.setItem('token', res.token);
         setLoggedIn(true);
         setEmail(email);
         navigate("/")
@@ -163,12 +173,6 @@ function App() {
       setIsInfoTooltipPopupOpen(true);
       setMessage({text: 'Что-то пошло не так! Попробуйте ещё раз.', img: unSuccessfully})
     })
-  }
-
-  function handleLogout() {
-    localStorage.removeItem('jwt');
-    setLoggedIn(false);
-    navigate("/signin")
   }
 
   function handleRegister(email, password) {
@@ -187,6 +191,18 @@ function App() {
       setMessage({text: 'Что-то пошло не так! Попробуйте ещё раз.', img: unSuccessfully})
     })
   }
+  
+  const tokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      Auth.checkToken(token)
+      .then((res) => {
+        setLoggedIn(true);
+        setEmail(res.email);
+      })
+      .catch((err) => {console.log(err)})
+    }
+   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -195,7 +211,7 @@ function App() {
         <Routes>
           <Route
             path="/signin"
-            element={<Login loggedIn={loggedIn} handleLogin={handleLogin}/>}
+            element={<Login loggedIn={loggedIn} handleLogin={handleLogin} tokenCheck={tokenCheck} />}
           />
           <Route
             path="/signup"
@@ -206,8 +222,8 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute path="/" >
-                <Main>
+              <ProtectedRoute path="/" loggedIn={loggedIn}>
+                <Main
                   cards={cards}
                   onEditAvatar={handleEditAvatarClick}
                   onEditProfile={handleEditProfileClick}
@@ -215,11 +231,12 @@ function App() {
                   onCardClick={handleCardClick}
                   onCardDelete={handleCardDelete}
                   onCardLike={handleCardLike}
-                </Main>
+                  selectedCard={selectedCard}
+                />
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={loggedIn ? <Navigate to="/"/> : <Navigate to="./signup" replace/>}/>
+          <Route path="*" element={loggedIn ? <Navigate to="/"/> : <Navigate to="/signin" replace/>}/>
         </Routes>
         <Footer />
         <ImagePopup onClose={closeAllPopups} card={selectedCard} />

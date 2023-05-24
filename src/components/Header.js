@@ -9,17 +9,17 @@ function Header({email, handleLogout}) {
       <Routes>
           <Route
             path="/signin"
-            element={<Link to='signup' className="header__link">Регистрация</Link>}
+            element={<Link to="/signup" className="header__link">Регистрация</Link>}
           />
           <Route
             path="/signup"
-            element={<Link to='signin' className="header__link">Войти</Link>}
+            element={<Link to="/signin" className="header__link">Войти</Link>}
           />
           <Route
             path="/"
             element={
               <div className="header__menu">
-                <Link to='signin' className="header__link" onClick={handleLogout}>Выйти</Link>
+                <Link to="/signin" className="header__link" onClick={handleLogout}>Выйти</Link>
                 <p className="header__email">{email}</p>
               </div>
             }

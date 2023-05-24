@@ -32,7 +32,7 @@ function Login({ handleLogin }) {
             placeholder='Email'
             required
           />
-          <span id="email-error" classname="popup__field-error"></span>
+          <span id="email-error" className="popup__field-error"></span>
           <input 
             className="popup__field popup__field_tipe_password"
             id="password" 
@@ -40,10 +40,12 @@ function Login({ handleLogin }) {
             type="password" 
             value={password} 
             onChange={handleChangePassword} 
-            placeholder='Пароль' 
+            placeholder='Пароль'
+            minLength="2"
+            maxLength="40"
             required
           />
-          <span id="password-error" classname="popup__field-error"></span>
+          <span id="password-error" className="popup__field-error"></span>
           <div className="login__button-container">
             <button type="submit" onSubmit={handleSubmit} className="login__link">Войти</button>
           </div>

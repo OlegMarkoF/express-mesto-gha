@@ -7,6 +7,7 @@
 @import url(./blocks/header/__logo/header__logo.css);
 @import url(./blocks/header/__enter/header__enter.css);
 @import url(./blocks/header/__link/header__link.css);
+@import url(./blocks/header/__menu/header__menu.css);
 
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__data/profile__data.css);
@@ -78,6 +79,7 @@
 @import url(./blocks/register/__link/register__link.css);
 @import url(./blocks/register/__signin/register__signin.css);
 @import url(./blocks/register/__login-link/register__login-link.css);
+@import url(./blocks/register/__login-text/register__login-text.css);
 
 @import url(./blocks/login/login.css);
 @import url(./blocks/login/__welcome/login__welcome.css);

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-//import * as Auth from "../utils/Auth";
+import { Link } from "react-router-dom";
 
 function Register({ handleRegister }) {
   const [email, setEmail] = useState("");
@@ -56,8 +55,8 @@ function Register({ handleRegister }) {
         </div>
       </form>
       <div className="register__signin">
-        <p>Уже зарегистрированы?</p>
-        <Link to="login" className="register__login-link">
+        <p className="register__login-text">Уже зарегистрированы?</p>
+        <Link to="/signin" className="register__login-link">
           Войти
         </Link>
       </div>
