@@ -19,6 +19,11 @@ import successfully from "../images/popup/успешно.svg";
 import unSuccessfully from "../images/popup/ошибка.svg";
 import * as Auth from "../utils/Auth";
 
+// Михаил, списибо за дельные советы по улучшению кода! 
+// Но пока я очень ограничен во времени, поэтому поправил только обязательную часть.
+
+// п.с. Этот коммент будет удален после прочтения :)
+
 function App() {
   
   const navigate = useNavigate();
