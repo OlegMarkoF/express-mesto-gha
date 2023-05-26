@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import "../index.css";
 import Footer from "./Footer";
@@ -19,11 +19,6 @@ import successfully from "../images/popup/успешно.svg";
 import unSuccessfully from "../images/popup/ошибка.svg";
 import * as Auth from "../utils/Auth";
 
-// Михаил, списибо за дельные советы по улучшению кода! 
-// Но пока я очень ограничен во времени, поэтому поправил только обязательную часть.
-
-// п.с. Этот коммент будет удален после прочтения :)
-
 function App() {
   
   const navigate = useNavigate();
@@ -40,12 +35,12 @@ function App() {
   const [email, setEmail] = useState('');
   const [cards, setCards] = useState([]);
   const [message, setMessage] = useState({text: '', img: ''});
-  
-  React.useEffect(() => {
-    tokenCheck();
-  }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
+    tokenCheck()
+  }, []);
+  
+  useEffect(() => {
     api
       .getInitialCards()
       .then((res) => {
@@ -54,7 +49,7 @@ function App() {
       .catch((err) => console.log(`Ошибка:${err}`));
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     api
       .getUserInfo()
       .then((res) => {
@@ -204,6 +199,7 @@ function App() {
       .then((res) => {
         setLoggedIn(true);
         setEmail(res.email);
+        navigate('/');
       })
       .catch((err) => {console.log(err)})
     }
