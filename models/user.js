@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
-
+    default: 'https://images.uznayvse.ru/960x540/p/images/content/2021/2/uzn_16141552734.jpg',
   },
 });
 
