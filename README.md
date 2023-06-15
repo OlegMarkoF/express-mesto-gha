@@ -1,7 +1,11 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 # Проект Mesto фронтенд + бэкенд
 
-## [Ссылка на проект](https://olegmarkof.github.io/express-mesto-gha/)
+## Здесь можно [посмотреть проект](https://olegmarkof.github.io/express-mesto-gha/)
+
+## Стек
+
+Работали с MongoDB, Express, Node.js
 
 ## Директории
 
