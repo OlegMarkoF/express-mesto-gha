@@ -23,7 +23,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user.userId, { name, about })
+  User.findByIdAndUpdate(req.user._id, { name, about })
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
@@ -31,13 +31,13 @@ module.exports.updateUser = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user.userId, { avatar })
+  User.findByIdAndUpdate(req.user._id, { avatar })
     .then((newAvatar) => res.send({ data: newAvatar }))
     .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.params._id)
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
