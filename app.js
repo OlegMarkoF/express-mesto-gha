@@ -18,12 +18,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(users);
-app.use(cards);
-
+app.use('/users', users);
+app.use('/cards', cards);
 app.use('*', (req, res) => {
-  res.status(404).send({
-    message: 'ошибка 404',
+  res.send({
+    message: 'Произошла ошибка',
   });
 });
 
