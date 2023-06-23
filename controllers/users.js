@@ -1,20 +1,16 @@
 const User = require('../models/user');
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+} = require('../utils/errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .orFail(() => {
-      const error = new Error('Пользователь не найден');
-      error.statusCode = 404;
-      throw error;
-    })
     .then((users) => res.send({ data: users }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ massage: 'Пользователь не найден' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ massage: err.massage });
-      } else {
-        res.status(500).send({ massage: 'Случилось непоправимое' });
+        res.status(BAD_REQUEST).send({ massage: err.massage });
       }
     });
 };
@@ -23,11 +19,6 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .orFail(() => {
-      const error = new Error('Пользователь не найден');
-      error.statusCode = 404;
-      throw error;
-    })
     .then((user) => res.send({
       data: {
         name: user.name,
@@ -36,12 +27,12 @@ module.exports.createUser = (req, res) => {
       },
     }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ massage: 'Пользователь не найден' });
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ massage: 'Пользователь не найден' });
       } else if (err.statusCode === 404) {
-        res.status(404).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ massage: err.massage });
       } else {
-        res.status(500).send({ massage: 'Случилось непоправимое' });
+        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
       }
     });
 };
@@ -49,7 +40,7 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(() => {
       const error = new Error('Пользователь не найден');
       error.statusCode = 404;
@@ -57,12 +48,12 @@ module.exports.updateUser = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ massage: 'Пользователь не найден' });
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ massage: err.massage });
       } else if (err.statusCode === 404) {
-        res.status(404).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ massage: err.massage });
       } else {
-        res.status(500).send({ massage: 'Случилось непоправимое' });
+        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
       }
     });
 };
@@ -70,7 +61,7 @@ module.exports.updateUser = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .orFail(() => {
       const error = new Error('Пользователь не найден');
       error.statusCode = 404;
@@ -78,12 +69,12 @@ module.exports.updateAvatar = (req, res) => {
     })
     .then((newAvatar) => res.send({ data: newAvatar }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ massage: 'Пользователь не найден' });
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ massage: err.massage });
       } else if (err.statusCode === 404) {
-        res.status(404).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ massage: err.massage });
       } else {
-        res.status(500).send({ massage: 'Случилось непоправимое' });
+        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
       }
     });
 };
@@ -98,11 +89,11 @@ module.exports.getUserById = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ massage: 'Id пользователя не найден' });
+        res.status(BAD_REQUEST).send({ massage: err.massage });
       } else if (err.statusCode === 404) {
-        res.status(404).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ massage: err.massage });
       } else {
-        res.status(500).send({ massage: 'Случилось непоправимое' });
+        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
       }
     });
 };
