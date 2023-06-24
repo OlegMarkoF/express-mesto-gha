@@ -32,6 +32,9 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } },
   { new: true },
 )
+  .catch(() => {
+    res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
+  })
   .then((card) => {
     if (!card) {
       res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
@@ -52,6 +55,9 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   { $pull: { likes: req.user._id } },
   { new: true },
 )
+  .catch(() => {
+    res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
+  })
   .then((card) => {
     if (!card) {
       res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
