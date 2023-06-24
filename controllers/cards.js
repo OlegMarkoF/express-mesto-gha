@@ -81,9 +81,9 @@ module.exports.deleteCard = (req, res) => {
             .catch((err) => {
               res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
             });
-        } else {
-          res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
         }
+      } else {
+        res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
       }
     })
     .catch((err) => {
