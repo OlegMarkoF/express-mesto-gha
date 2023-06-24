@@ -10,9 +10,7 @@ module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ massage: err.massage });
-      }
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -24,16 +22,15 @@ module.exports.createUser = (req, res) => {
       data: {
         name: user.name,
         about: user.about,
-        avatar,
+        avatar: user.avatar,
+        _id: user._id,
       },
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ massage: 'Пользователь не найден' });
-      } else if (err.statusCode === 404) {
-        res.status(NOT_FOUND).send({ massage: err.massage });
+        res.status(BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
       }
     });
 };
@@ -50,11 +47,11 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ massage: err.massage });
+        res.status(BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else if (err.statusCode === 404) {
-        res.status(NOT_FOUND).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
       }
     });
 };
@@ -71,11 +68,11 @@ module.exports.updateAvatar = (req, res) => {
     .then((newAvatar) => res.send({ data: newAvatar }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ massage: err.massage });
+        res.status(BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else if (err.statusCode === 404) {
-        res.status(NOT_FOUND).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
       }
     });
 };
@@ -90,11 +87,11 @@ module.exports.getUserById = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ massage: err.massage });
+        res.status(BAD_REQUEST).send({ message: err.message });
       } else if (err.statusCode === 404) {
-        res.status(NOT_FOUND).send({ massage: err.massage });
+        res.status(NOT_FOUND).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
       }
     });
 };

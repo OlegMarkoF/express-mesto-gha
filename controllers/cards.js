@@ -10,7 +10,7 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
-      console.log(`Произошла ошибка: ${err.name} ${err.message}`);
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -20,9 +20,9 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ massage: err.massage });
+        res.status(BAD_REQUEST).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
       }
     });
 };
@@ -34,16 +34,16 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => {
     if (!card) {
-      res.status(NOT_FOUND).send({ massage: 'Ошибка 404' });
+      res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
     } else {
       res.send({ likes: card.likes });
     }
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(BAD_REQUEST).send({ massage: err.massage });
+      res.status(BAD_REQUEST).send({ message: err.message });
     } else {
-      res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     }
   });
 
@@ -54,16 +54,16 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .then((card) => {
     if (!card) {
-      res.status(NOT_FOUND).send({ massage: 'Ошибка 404' });
+      res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
     } else {
       res.send({ likes: card.likes });
     }
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(BAD_REQUEST).send({ massage: err.massage });
+      res.status(BAD_REQUEST).send({ message: err.message });
     } else {
-      res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     }
   });
 
@@ -79,16 +79,18 @@ module.exports.deleteCard = (req, res) => {
               res.status(200).send({ data: deleted });
             })
             .catch((err) => {
-              console.log(`Произошла ошибка: ${err.name} ${err.message}`);
+              res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
             });
+        } else {
+          res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
         }
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ massage: err.massage });
+        res.status(BAD_REQUEST).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ massage: err.massage });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
       }
     });
 };

@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
+const {
+  NOT_FOUND,
+} = require('./utils/errors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -21,8 +24,8 @@ app.use((req, res, next) => {
 app.use('/users', users);
 app.use('/cards', cards);
 app.use('*', (req, res) => {
-  res.send({
-    message: 'Произошла ошибка',
+  res.status(NOT_FOUND).send({
+    message: 'Ошибка 404',
   });
 });
 
