@@ -108,7 +108,7 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email, password })
+  User.findOne({ email })
     .select('+password')
     .orFail(() => new Error('Пользователь не найден'))
     .then((user) => {
