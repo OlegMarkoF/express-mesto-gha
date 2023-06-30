@@ -3,18 +3,17 @@ const Card = require('../models/card');
 const {
   BAD_REQUEST,
   NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
 } = require('../utils/errors');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+    .catch(() => {
+      next();
     });
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ card }))
@@ -22,12 +21,12 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+        next();
       }
     });
 };
 
-module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } },
   { new: true },
@@ -43,11 +42,11 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
     if (err.name === 'CastError') {
       res.status(BAD_REQUEST).send({ message: err.message });
     } else {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      next();
     }
   });
 
-module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } },
   { new: true },
@@ -63,11 +62,11 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
     if (err.name === 'CastError') {
       res.status(BAD_REQUEST).send({ message: err.message });
     } else {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      next();
     }
   });
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (card) {
@@ -78,8 +77,8 @@ module.exports.deleteCard = (req, res) => {
             .then((deleted) => {
               res.status(200).send({ data: deleted });
             })
-            .catch((err) => {
-              res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+            .catch(() => {
+              next();
             });
         }
       } else {
@@ -90,7 +89,7 @@ module.exports.deleteCard = (req, res) => {
       if (err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+        next();
       }
     });
 };

@@ -5,19 +5,15 @@ const User = require('../models/user');
 const {
   BAD_REQUEST,
   NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
-  UNAUTHORIZED,
 } = require('../utils/errors');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => {
-      res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -46,12 +42,12 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+        next();
       }
     });
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
@@ -64,15 +60,13 @@ module.exports.updateUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Переданные данные некорректны' });
-      } else if (err.statusCode === 404) {
-        res.status(NOT_FOUND).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+        next();
       }
     });
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
@@ -88,12 +82,12 @@ module.exports.updateAvatar = (req, res) => {
       } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+        next();
       }
     });
 };
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params._id)
     .orFail(() => {
       const error = new Error('Пользователь по id не найден');
@@ -107,21 +101,28 @@ module.exports.getUserById = (req, res) => {
       } else if (err.statusCode === 404) {
         res.status(NOT_FOUND).send({ message: err.message });
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+        next();
       }
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findUserByCredentials(email, password)
+  User.findOne(email, password)
+    .orFail(() => new Error('Пользователь не найден'))
     .then((user) => {
+      bcrypt.compare(password, user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            res.send({ data: user });
+          } else {
+            res.status(403).send({ message: 'Неправильный пароль' });
+          }
+        });
       const token = jwt.sign({ _id: user._id }, { expiresIn: '7d' });
       res
         .cookie('jwt', token, {})
         .send({ message: '' });
     })
-    .catch((err) => {
-      res.status(UNAUTHORIZED).send({ message: err.message });
-    });
+    .catch(next);
 };
