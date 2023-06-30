@@ -108,21 +108,24 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne(email, password)
+  User.findOne({ email, password })
+    .select('+password')
     .orFail(() => new Error('Пользователь не найден'))
     .then((user) => {
-      bcrypt.compare(password, user.password)
+      bcrypt.compare(String(password), user.password)
         .then((isValidUser) => {
           if (isValidUser) {
-            res.send({ data: user });
+            const token = jwt.sign({ _id: user._id }, { expiresIn: '7d' });
+            res.cookie('jwt', token, {
+              maxAge: 360000,
+              httpOnly: true,
+              sameSite: true,
+            });
+            res.send({ data: user.toJSON() });
           } else {
             res.status(403).send({ message: 'Неправильный пароль' });
           }
         });
-      const token = jwt.sign({ _id: user._id }, { expiresIn: '7d' });
-      res
-        .cookie('jwt', token, {})
-        .send({ message: '' });
     })
     .catch(next);
 };
