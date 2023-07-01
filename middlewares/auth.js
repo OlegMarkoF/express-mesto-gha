@@ -5,7 +5,7 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, '');
+    payload = jwt.verify(token, 'SECRET');
   } catch (err) {
     next(err);
   }
