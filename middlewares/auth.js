@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('../utils/UnauthorizedError');
 
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -7,7 +8,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'SECRET');
   } catch (err) {
-    next(err);
+    throw new UnauthorizedError('Переданы неверные данные');
   }
   req.user = payload;
   next();

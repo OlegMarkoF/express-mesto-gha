@@ -1,9 +1,7 @@
 const Card = require('../models/card');
-
-const {
-  BAD_REQUEST,
-  NOT_FOUND,
-} = require('../utils/errors');
+const BadRequestError = require('../utils/BadRequestError');
+const NotFoundError = require('../utils/NotFoundError');
+const ForbiddenError = require('../utils/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -19,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(BAD_REQUEST).send({ message: err.message });
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next();
       }
@@ -33,14 +31,14 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
 )
   .then((card) => {
     if (!card) {
-      res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
+      next(new NotFoundError('Карточка не найдена'));
     } else {
       res.send({ likes: card.likes });
     }
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(BAD_REQUEST).send({ message: err.message });
+      next(new BadRequestError('Переданы некорректные данные'));
     } else {
       next();
     }
@@ -53,14 +51,14 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
 )
   .then((card) => {
     if (!card) {
-      res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
+      next(new NotFoundError('Карточка не найдена'));
     } else {
       res.send({ likes: card.likes });
     }
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(BAD_REQUEST).send({ message: err.message });
+      next(new BadRequestError('Переданы некорректные данные'));
     } else {
       next();
     }
@@ -80,14 +78,16 @@ module.exports.deleteCard = (req, res, next) => {
             .catch(() => {
               next();
             });
+        } else {
+          next(new ForbiddenError('Нельзя удалить чужую карточку'));
         }
       } else {
-        res.status(NOT_FOUND).send({ message: 'Ошибка 404' });
+        next(new NotFoundError('Карточка не найдена'));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: err.message });
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next();
       }
