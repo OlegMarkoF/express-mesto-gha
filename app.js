@@ -6,7 +6,7 @@ const { errors } = require('celebrate');
 const users = require('./routes/users');
 const cards = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
-const { NOT_FOUND } = require('./utils/errors');
+const { NotFoundError } = require('./utils/NotFoundError');
 const auth = require('./middlewares/auth');
 const {
   validateUser, validateLogin,
@@ -30,13 +30,11 @@ app.post('/signup', validateUser, createUser);
 
 app.use('/users', auth, users);
 app.use('/cards', auth, cards);
-app.use('*', (req, res) => {
-  res.status(NOT_FOUND).send({
-    message: 'Ошибка 404',
-  });
+app.use('*', () => {
+  throw new NotFoundError('Страница не найдена');
 });
-app.use(errorHandler);
 app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
