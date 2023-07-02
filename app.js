@@ -30,7 +30,7 @@ app.post('/signup', validateUser, createUser);
 
 app.use('/users', auth, users);
 app.use('/cards', auth, cards);
-app.use('*', () => {
+app.use('/*', () => {
   throw new NotFoundError('Страница не найдена');
 });
 app.use(errors());
